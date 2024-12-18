@@ -6,7 +6,7 @@ import pandas as pd
 def load_data():
     try:
         # Load and clean the data
-        data = pd.read_csv("products3.csv")
+        data = pd.read_csv("products3.csv", delimiter=';')
         data["Power (W)"] = pd.to_numeric(data["Power (W)"], errors="coerce")
         data["Lumen Output"] = pd.to_numeric(data["Lumen Output"], errors="coerce")
         data = data.dropna(subset=["Power (W)", "Lumen Output"])

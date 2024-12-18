@@ -80,12 +80,12 @@ def main():
         st.header("Matched Products")
         if not filtered_data.empty:
             # Create columns for the grid
-            cols = st.columns(4)
+            cols = st.columns(3)
 
             # Loop through the rows and distribute them across columns
             for index, row in filtered_data.iterrows():
-                # Place content in one of the 4 columns using modulo operator
-                with cols[index % 4]:
+                # Place content in one of the 3 columns using modulo operator
+                with cols[index % 3]:
                     st.image(row["Image URL"], width=130)  # Set a smaller image size
                     st.markdown(f"""
                         <div style="text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 15px;">

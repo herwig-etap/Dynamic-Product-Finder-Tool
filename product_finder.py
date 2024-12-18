@@ -6,7 +6,7 @@ def load_data(refresh=False):
     # Force refresh logic
     if refresh:
         st.cache_data.clear()
-    return pd.read_csv("products.csv")
+    return pd.read_csv("products2.csv")
 
 # Filter products based on requirements
 def filter_products(df, space_types, lighting_types, atex_certified, power_range, lumen_range):

@@ -86,16 +86,20 @@ def main():
             for index, row in filtered_data.iterrows():
                 # Place content in one of the 4 columns using modulo operator
                 with cols[index % 4]:
-                    st.image(row["Image URL"], width=150)
-                    st.subheader(row["Product Name"])
-                    st.write(f"**Lighting Type**: {row['Lighting Type']}")
-                    st.write(f"**Space Type**: {row['Space Type']}")
-                    st.write(f"**Power (W):** {row['Power (W)']}")
-                    st.write(f"**Lumen Output:** {row['Lumen Output']} lm")
-                    st.write(f"[View Product]({row['Product Link']})")
-                    st.write("---")  # Add a separator
-        else:
-            st.warning("No products match your filters. Please adjust your selections.")
+                    st.image(row["Image URL"], width=130)  # Set a smaller image size
+                    st.markdown(f"""
+                        <div style="text-align: center; font-size: 16px; font-weight: bold; margin-bottom: 5px;">
+                        {row["Product Name"]}
+                        </div>
+                        <div style="font-size: 12px; line-height: 1.4; margin-bottom: 10px;">
+                            <b>Lighting Type:</b> {row['Lighting Type']}<br>
+                            <b>Space Type:</b> {row['Space Type']}<br>
+                            <b>Power:</b> {row['Power (W)']} W<br>
+                            <b>Lumen Output:</b> {row['Lumen Output']} lm
+                        </div>
+                    <a href="{row['Product Link']}" target="_blank" style="font-size: 12px; color: blue;">View Product</a>
+                    <hr style="border: 0.5px solid #ddd; margin-top: 10px;">
+                """, unsafe_allow_html=True)  # Render HTML for better styling
 
     else:
         st.info("Please choose your filters in the sidebar and click 'Apply Filters' to see results.")

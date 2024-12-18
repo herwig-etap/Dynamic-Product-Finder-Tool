@@ -2,8 +2,10 @@ import streamlit as st
 import pandas as pd
 
 # Load product data
-@st.cache_data
-def load_data():
+def load_data(refresh=False):
+    # Force refresh logic
+    if refresh:
+        st.cache_data.clear()
     return pd.read_csv("products.csv")
 
 # Filter products based on requirements
@@ -26,12 +28,10 @@ def main():
     st.write("Find the most suitable lighting products based on your requirements.")
 
     # Add a refresh button
-    if st.button("Refresh Data"):
-        st.cache_data.clear()  # Clear cached data
-        st.experimental_rerun()  # Rerun the app to reload fresh data
+    refresh = st.button("Refresh Data")  # Boolean indicating if refresh was clicked
 
     # Load data
-    data = load_data()
+    data = load_data(refresh=refresh)
 
     # Sidebar filters
     st.sidebar.header("Filter Products")
@@ -77,7 +77,7 @@ def main():
             st.subheader(row["Product Name"])
             st.image(row["Image URL"], width=150)
             st.write(f"**Lighting Type**: {row['Lighting Type']}")
-            st.write(f"**Space Type**: {row['Space Type']}") 
+            st.write(f"**Space Type**: {row['Space Type']}")
             st.write(f"**ATEX Certified**: {row['ATEX Certified']}")
             st.write(f"**Power Consumption**: {row['Power (W)']} W")
             st.write(f"**Lumen Output**: {row['Lumen Output']} lm")

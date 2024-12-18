@@ -88,7 +88,7 @@ def main():
                 with cols[index % 4]:
                     st.image(row["Image URL"], width=130)  # Set a smaller image size
                     st.markdown(f"""
-                        <div style="text-align: center; font-size: 12px; font-weight: bold; margin-bottom: 5px;">
+                        <div style="text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 15px;">
                         {row["Product Name"]}
                         </div>
                         <div style="font-size: 12px; line-height: 1.4; margin-bottom: 10px;">

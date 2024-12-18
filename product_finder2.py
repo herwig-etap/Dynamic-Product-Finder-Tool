@@ -84,18 +84,18 @@ def main():
 
             # Loop through the rows and distribute them across columns
             for index, row in filtered_data.iterrows():
-            # Place content in one of the 4 columns using modulo operator
-            with cols[index % 4]:
-            st.image(row["Image URL"], width=150)
-            st.subheader(row["Product Name"])
-            st.write(f"**Lighting Type**: {row['Lighting Type']}")
-            st.write(f"**Space Type**: {row['Space Type']}")
-            st.write(f"**Power (W):** {row['Power (W)']}")
-            st.write(f"**Lumen Output:** {row['Lumen Output']} lm")
-            st.write(f"[View Product]({row['Product Link']})")
-            st.write("---")  # Add a separator
-else:
-    st.warning("No products match your filters. Please adjust your selections.")
+                # Place content in one of the 4 columns using modulo operator
+                with cols[index % 4]:
+                    st.image(row["Image URL"], width=150)
+                    st.subheader(row["Product Name"])
+                    st.write(f"**Lighting Type**: {row['Lighting Type']}")
+                    st.write(f"**Space Type**: {row['Space Type']}")
+                    st.write(f"**Power (W):** {row['Power (W)']}")
+                    st.write(f"**Lumen Output:** {row['Lumen Output']} lm")
+                    st.write(f"[View Product]({row['Product Link']})")
+                    st.write("---")  # Add a separator
+        else:
+            st.warning("No products match your filters. Please adjust your selections.")
 
     else:
         st.info("Please choose your filters in the sidebar and click 'Apply Filters' to see results.")

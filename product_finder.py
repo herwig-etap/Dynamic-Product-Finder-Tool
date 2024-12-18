@@ -25,6 +25,11 @@ def main():
     st.title("Dynamic Product Finder Tool")
     st.write("Find the most suitable lighting products based on your requirements.")
 
+    # Add a refresh button
+    if st.button("Refresh Data"):
+        st.cache_data.clear()  # Clear cached data
+        st.experimental_rerun()  # Rerun the app to reload fresh data
+
     # Load data
     data = load_data()
 
@@ -72,7 +77,7 @@ def main():
             st.subheader(row["Product Name"])
             st.image(row["Image URL"], width=150)
             st.write(f"**Lighting Type**: {row['Lighting Type']}")
-            st.write(f"**Space Type**: {row['Space Type']}")
+            st.write(f"**Space Type**: {row['Space Type']}") 
             st.write(f"**ATEX Certified**: {row['ATEX Certified']}")
             st.write(f"**Power Consumption**: {row['Power (W)']} W")
             st.write(f"**Lumen Output**: {row['Lumen Output']} lm")

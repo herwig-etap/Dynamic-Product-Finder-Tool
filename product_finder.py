@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # Load product data from CSV
-@st.cache
+@st.cache_data
 def load_data():
     return pd.read_csv("products.csv")
 

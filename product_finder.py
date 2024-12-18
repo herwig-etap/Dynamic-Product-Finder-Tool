@@ -36,12 +36,19 @@ def main():
     # Sidebar filters
     st.sidebar.header("Filter Products")
 
-    # Multi-select for space types and lighting types
-    space_types = st.sidebar.multiselect(
-        "Select Space Types",
-        options=data["Space Type"].unique(),
-        default=data["Space Type"].unique()
-    )
+    # Multi-select for space types
+space_types = st.sidebar.multiselect(
+    "Select Space Types",
+    options=data["Space Type"].dropna().unique(),  # Drop invalid values like NaN
+    default=[]  # Set default to empty
+)
+
+# Multi-select for lighting types
+lighting_types = st.sidebar.multiselect(
+    "Select Lighting Types",
+    options=data["Lighting Type"].dropna().unique(),  # Drop invalid values like NaN
+    default=[]  # Set default to empty
+)
 
     lighting_types = st.sidebar.multiselect(
         "Select Lighting Types",

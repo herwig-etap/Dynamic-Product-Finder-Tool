@@ -52,6 +52,14 @@ def main():
     # ATEX certification checkbox
     atex_certified = st.sidebar.checkbox("ATEX Certified (Explosion-proof)", value=False)
 
+
+
+    # Ensure Power (W) is numeric
+data["Power (W)"] = pd.to_numeric(data["Power (W)"], errors='coerce')  # Convert non-numeric values to NaN
+
+# Drop rows with missing or invalid values in Power (W)
+data = data.dropna(subset=["Power (W)"])
+
     # Power and lumen range sliders
     power_range = st.sidebar.slider(
         "Select Power Range (W)",

@@ -50,11 +50,7 @@ def main():
     default=[]  # Set default to empty
     )
 
-    lighting_types = st.sidebar.multiselect(
-        "Select Lighting Types",
-        options=data["Lighting Type"].unique(),
-        default=data["Lighting Type"].unique()
-    )
+    
 
     # ATEX certification checkbox
     atex_certified = st.sidebar.checkbox("ATEX Certified (Explosion-proof)", value=False)

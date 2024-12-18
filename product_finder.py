@@ -27,11 +27,11 @@ def main():
     st.title("Dynamic Product Finder Tool")
     st.write("Find the most suitable lighting products based on your requirements.")
 
-    # Add a refresh button
-    refresh = st.button("Refresh Data")  # Boolean indicating if refresh was clicked
-
-    # Load data
-    data = load_data(refresh=refresh)
+    # Load and clean data
+    data = load_data()
+    data["Power (W)"] = pd.to_numeric(data["Power (W)"], errors='coerce')  # Convert non-numeric to NaN
+    data["Lumen Output"] = pd.to_numeric(data["Lumen Output"], errors='coerce')  # Same for Lumen Output
+    data = data.dropna(subset=["Power (W)", "Lumen Output"])  # Drop rows with NaN in critical columns
 
     # Sidebar filters
     st.sidebar.header("Filter Products")
@@ -52,28 +52,29 @@ def main():
     # ATEX certification checkbox
     atex_certified = st.sidebar.checkbox("ATEX Certified (Explosion-proof)", value=False)
 
+    # Power range slider
+    if not data["Power (W)"].empty:
+        power_range = st.sidebar.slider(
+            "Select Power Range (W)",
+            min_value=int(data["Power (W)"].min()),
+            max_value=int(data["Power (W)"].max()),
+            value=(int(data["Power (W)"].min()), int(data["Power (W)"].max()))
+        )
+    else:
+        st.warning("No valid data in 'Power (W)' column.")
+        power_range = (0, 0)
 
-
-    # Ensure Power (W) is numeric
-data["Power (W)"] = pd.to_numeric(data["Power (W)"], errors='coerce')  # Convert non-numeric values to NaN
-
-# Drop rows with missing or invalid values in Power (W)
-data = data.dropna(subset=["Power (W)"])
-
-    # Power and lumen range sliders
-    power_range = st.sidebar.slider(
-        "Select Power Range (W)",
-        min_value=int(data["Power (W)"].min()),
-        max_value=int(data["Power (W)"].max()),
-        value=(int(data["Power (W)"].min()), int(data["Power (W)"].max()))
-    )
-
-    lumen_range = st.sidebar.slider(
-        "Select Lumen Output Range",
-        min_value=int(data["Lumen Output"].min()),
-        max_value=int(data["Lumen Output"].max()),
-        value=(int(data["Lumen Output"].min()), int(data["Lumen Output"].max()))
-    )
+    # Lumen range slider
+    if not data["Lumen Output"].empty:
+        lumen_range = st.sidebar.slider(
+            "Select Lumen Output Range",
+            min_value=int(data["Lumen Output"].min()),
+            max_value=int(data["Lumen Output"].max()),
+            value=(int(data["Lumen Output"].min()), int(data["Lumen Output"].max()))
+        )
+    else:
+        st.warning("No valid data in 'Lumen Output' column.")
+        lumen_range = (0, 0)
 
     # Filter data
     filtered_products = filter_products(data, space_types, lighting_types, atex_certified, power_range, lumen_range)
@@ -101,6 +102,7 @@ data = data.dropna(subset=["Power (W)"])
         )
     else:
         st.warning("No products match your requirements. Try adjusting your filters.")
+
 
 if __name__ == "__main__":
     main()

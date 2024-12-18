@@ -1,18 +1,23 @@
 import streamlit as st
 import pandas as pd
 
-# Load product data from CSV
+# Load product data
 @st.cache_data
 def load_data():
     return pd.read_csv("products.csv")
 
-# Filter products based on customer requirements
-def filter_products(df, space_type, lighting_type, atex_certified):
+# Filter products based on requirements
+def filter_products(df, space_types, lighting_types, atex_certified, power_range, lumen_range):
     filtered = df[
-        (df["Space Type"] == space_type) &
-        (df["Lighting Type"] == lighting_type) &
-        ((df["ATEX Certified"] == "Yes") if atex_certified else True)
+        (df["Space Type"].isin(space_types)) &
+        (df["Lighting Type"].isin(lighting_types)) &
+        (df["Power (W)"] >= power_range[0]) &
+        (df["Power (W)"] <= power_range[1]) &
+        (df["Lumen Output"] >= lumen_range[0]) &
+        (df["Lumen Output"] <= lumen_range[1])
     ]
+    if atex_certified:
+        filtered = filtered[filtered["ATEX Certified"] == "Yes"]
     return filtered
 
 # Main Streamlit app
@@ -20,19 +25,47 @@ def main():
     st.title("Dynamic Product Finder Tool")
     st.write("Find the most suitable lighting products based on your requirements.")
 
-    # Load product data
+    # Load data
     data = load_data()
 
-    # Input Form
-    st.sidebar.header("Enter Your Requirements")
-    space_type = st.sidebar.selectbox("Space Type", options=data["Space Type"].unique())
-    lighting_type = st.sidebar.selectbox("Lighting Type", options=data["Lighting Type"].unique())
+    # Sidebar filters
+    st.sidebar.header("Filter Products")
+
+    # Multi-select for space types and lighting types
+    space_types = st.sidebar.multiselect(
+        "Select Space Types",
+        options=data["Space Type"].unique(),
+        default=data["Space Type"].unique()
+    )
+
+    lighting_types = st.sidebar.multiselect(
+        "Select Lighting Types",
+        options=data["Lighting Type"].unique(),
+        default=data["Lighting Type"].unique()
+    )
+
+    # ATEX certification checkbox
     atex_certified = st.sidebar.checkbox("ATEX Certified (Explosion-proof)", value=False)
 
-    # Filter products
-    filtered_products = filter_products(data, space_type, lighting_type, atex_certified)
+    # Power and lumen range sliders
+    power_range = st.sidebar.slider(
+        "Select Power Range (W)",
+        min_value=int(data["Power (W)"].min()),
+        max_value=int(data["Power (W)"].max()),
+        value=(int(data["Power (W)"].min()), int(data["Power (W)"].max()))
+    )
 
-    # Display Results
+    lumen_range = st.sidebar.slider(
+        "Select Lumen Output Range",
+        min_value=int(data["Lumen Output"].min()),
+        max_value=int(data["Lumen Output"].max()),
+        value=(int(data["Lumen Output"].min()), int(data["Lumen Output"].max()))
+    )
+
+    # Filter data
+    filtered_products = filter_products(data, space_types, lighting_types, atex_certified, power_range, lumen_range)
+
+    # Display results
     st.header("Matched Products")
     if not filtered_products.empty:
         for _, row in filtered_products.iterrows():
@@ -46,7 +79,7 @@ def main():
             st.write(f"[View Product]({row['Product Link']})")
             st.write("---")
 
-        # Download Results
+        # Download results
         st.download_button(
             label="Download Matched Products as CSV",
             data=filtered_products.to_csv(index=False),
